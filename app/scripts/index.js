@@ -6,7 +6,8 @@ var fbUrl = 'https://jdtictactoe.firebaseio.com/',
        	            user1:"",
        	            user2:"",
        	            board:[]
-       };
+       },
+       isPlayer1Turn = true;
 
 console.log('JS loaded');
 $('#newGame').on('click', function() {
@@ -15,5 +16,19 @@ $('#newGame').on('click', function() {
 	});
 
 $('.game_board').on('click', 'td', function() {
-  $(this).addClass('red_background');
-})
+  if(isPlayer1Turn) {
+    $(this).addClass('red_background');
+  } else {
+    $(this).addClass('blue_background');
+  }
+  toggleTurn(isPlayer1Turn);
+  console.log(isPlayer1Turn);
+});
+
+function toggleTurn (userTurn) {
+  if (userTurn) {
+    isPlayer1Turn = false;
+  } else if (userTurn === false) {
+    isPlayer1Turn = true;
+  }
+}
