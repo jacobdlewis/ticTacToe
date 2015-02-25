@@ -11,7 +11,9 @@ html(lang='en-US')
     .container
       .page-header.clearfix
         h1 Tic Tac Toe
-        button#newGame.btn.btn-default.pull-right New Game
+        form
+          input#userNameInput(type='text', placeholder='enter your name')
+          button#findGame.btn.btn-default Find Game        
       table.table-bordered.game_board
         tr
           td

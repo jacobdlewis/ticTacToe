@@ -1,19 +1,14 @@
 'use strict';
 
-var fbUrl = 'https://jdtictactoe.firebaseio.com/',
+var fbUrl = 'https://jdtictactoe.firebaseio.com/games',
        fb = new Firebase(fbUrl),
        game = {
        	            user1:"",
        	            user2:"",
        	            board:[]
        },
-       isPlayer1Turn = true;
-
-console.log('JS loaded');
-$('#newGame').on('click', function() {
-    fb.push(game);
-    console.log('clicked');
-	});
+     isPlayer1Turn = true,
+     gameList;
 
 $('.game_board').on('click', 'td', function() {
   if(isPlayer1Turn) {
@@ -22,7 +17,35 @@ $('.game_board').on('click', 'td', function() {
     $(this).addClass('blue_background');
   }
   toggleTurn(isPlayer1Turn);
-  console.log(isPlayer1Turn);
+});
+
+$('form').submit(function(evt){
+	//User enters name.
+	event.preventDefault();
+	var enteredUserName;
+	enteredUserName = $('#userNameInput').val();
+	//ask FB for games
+    fb.once('value', function(snap){
+    	gameList = snap.val();
+    	console.log(gameList);
+    });
+    //if game list is empty, create game.
+    debugger;
+    if (gameList === null) {
+    	game.user1 = enteredUserName;
+    	fb.push(game);
+    } 
+    //else {
+    // //	_.forEach(gameList, function(g){
+    // 		if (g.user1 === "") {
+    // 			g.user1 = enteredUserName;
+    // 			fb.set(g);
+    // 		} else if (g.user2 === "") {
+    //             g.user2 = enteredUserName;
+    // 			fb.set(g);
+    // 		};
+    // 	});
+    // }
 });
 
 function toggleTurn (userTurn) {
