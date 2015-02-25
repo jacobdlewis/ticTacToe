@@ -7,8 +7,13 @@ var fbUrl = 'https://jdtictactoe.firebaseio.com/',
        	            user2:"",
        	            board:[]
        };
+
 console.log('JS loaded');
 $('#newGame').on('click', function() {
     fb.push(game);
     console.log('clicked');
 	});
+
+$('.game_board').on('click', 'td', function() {
+  $(this).addClass('red_background');
+})
