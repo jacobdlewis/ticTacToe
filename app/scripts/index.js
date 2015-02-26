@@ -10,7 +10,9 @@ var fbUrl = 'https://jdtictactoe.firebaseio.com/games',
      isPlayer1Turn = true,
      gameList,
      board = [['', '', ''], ['', '', ''], ['', '', '']];
+
 drawBoard(board);
+
 function drawBoard(boardArray) {
   var $table = $('<table class="game_board table-bordered"></table>');
   boardArray.forEach(function(row) {
@@ -23,14 +25,22 @@ function drawBoard(boardArray) {
   $('.container').append($table);
 };
 
+
+
 $('.game_board').on('click', 'td', function() {
 	console.log($(this).index());
-  if(isPlayer1Turn) {
-    $(this).addClass('red_background');
+  if($(this).hasClass('red_background') || $(this).hasClass('blue_background')) {
+    $('.container').append('<span class="wrongMove">Invalid move. That space has been claimed.</span>');
   } else {
-    $(this).addClass('blue_background');
+	  if(isPlayer1Turn) {
+	    $(this).addClass('red_background'),
+	    $('.wrongMove').remove();
+	  } else {
+	    $(this).addClass('blue_background'),
+	    $('.wrongMove').remove();;
+	  }
+	  toggleTurn(isPlayer1Turn);
   }
-  toggleTurn(isPlayer1Turn);
 });
 
 //$('form').submit(function(evt){
