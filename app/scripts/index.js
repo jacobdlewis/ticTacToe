@@ -28,7 +28,8 @@ function drawBoard(boardArray) {
 
 
 $('.game_board').on('click', 'td', function() {
-	console.log($(this).index());
+  var cellCoord  = $(this).index(),
+      rowCoord = $(this).closest('tr').index();
   if($(this).hasClass('red_background') || $(this).hasClass('blue_background')) {
     $('.container').append('<span class="wrongMove">Invalid move. That space has been claimed.</span>');
   } else {
@@ -39,9 +40,49 @@ $('.game_board').on('click', 'td', function() {
 	    $(this).addClass('blue_background'),
 	    $('.wrongMove').remove();;
 	  }
-	  toggleTurn(isPlayer1Turn);
+  if (isPlayer1Turn === true){
+     board[rowCoord][cellCoord] = 'X';
+   } else {
+     board[rowCoord][cellCoord] = 'O';
+   }
+  toggleTurn(isPlayer1Turn);
   }
 });
+
+function checkWinner() {
+	//horizontal 1st row
+  if (state[0][0] !== "" && state[0][0] === state[0][1] && state[0][0] === state[0][2]) {
+    alert(player + ' is the winner!');
+  }
+  //horizontal 2nd row
+  else if (state[1][0] !== "" && state[1][0] === state[1][1] && state[1][0] === state[1][2]) {
+    alert('Winner!');
+  }
+  //horizontal 3rd row
+  else if (state[2][0] !== "" && state[2][0] === state[2][1] && state[2][0] === state[2][2]) {
+    alert('Winner!');
+  }
+  //vertical 1st column
+  else if (state[0][0] !== "" && state[0][0] === state[1][0] && state[1][0] === state[2][0]) {
+    alert('Winner!');
+  }
+  //vertical 2nd column
+  else if (state[0][1] !== "" && state[0][1] === state[1][1] && state[0][1] === state[2][1]) {
+    alert('Winner!');
+  }
+  //vertical 3rd column
+  else if (state[0][2] !== "" && state[0][2] === state[1][2] && state[0][2] === state[2][2]) {
+    alert('Winner!');
+  }
+  //diagonal right
+  else if (state[0][0] !== "" && state[0][0] === state[1][1] && state[0][0] === state[2][2]) {
+    alert('Winner!');
+  }
+  //diagonal left
+  else if (state[0][2] !== "" && state[0][2] === state[1][1] && state[0][2] === state[2][0]) {
+    alert('Winner!');
+  }
+};
 
 //$('form').submit(function(evt){
 //	//User enters name.
