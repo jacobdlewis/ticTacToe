@@ -8,7 +8,8 @@ var fbUrl = 'https://jdtictactoe.firebaseio.com/games',
        	            board:[['', '', ''], ['', '', ''], ['', '', '']],
        	            isPlayer1Turn: true
        },
-     player = 'Player 1';
+     player = 'Player 1',
+     gameList;
 
 drawBoard(game.board);
 
@@ -108,37 +109,38 @@ function toggleTurn (userTurn) {
   }
 }
 
-//$('form').submit(function(evt){
-//	//User enters name.
-//	event.preventDefault();
-	// var enteredUserName;
-	// enteredUserName = $('#userNameInput').val();
-	// //ask FB for games
- //    fb.once('value', function(snap){
- //    	gameList = snap.val();
- //    	console.log(gameList);
- //    });
- //    //if game list is empty, create game.
- //    debugger;
- //    if (gameList === null) {
- //    	game.user1 = enteredUserName;
- //    	fb.push(game);
- //    } 
-    //else {
-    // //	_.forEach(gameList, function(g){
-    // 		if (g.user1 === "") {
-    // 			g.user1 = enteredUserName;
-    // 			fb.set(g);
-    // 		} else if (g.user2 === "") {
-    //             g.user2 = enteredUserName;
-    // 			fb.set(g);
-    // 		};
-    // 	});
-    // }
-//});
+$('form').submit(function(evt){
+	//User enters name.
+	event.preventDefault();
+	var enteredUserName;
+	enteredUserName = $('#userNameInput').val();
+	//ask FB for games
+    fb.once('value', function(snap){
+    	gameList = snap.val();
+    	console.log(gameList);
+    });
+    //if game list is empty, create game.
+    if (gameList === null) {
+    	game.user1 = enteredUserName;
+    	fb.push(game);
+    } 
+    else {
+    //	_.forEach(gameList, function(g){
+    		if (game.user1 === "") {
+    			game.user1 = enteredUserName;
+    			fb.set(game);
+    		} else if (game.user2 === "") {
+                game.user2 = enteredUserName;
+    			fb.set(game);
+    		};
+    	}
+    }
+);
 
-	  // if(game.isPlayer1Turn) {
-	  //   $(this).addClass('red_background');
-	  // } else {
-	  //   $(this).addClass('blue_background');
-	  // }
+
+//below was for original color styling prior to X and O
+  // if(game.isPlayer1Turn) {
+  //   $(this).addClass('red_background');
+  // } else {
+  //   $(this).addClass('blue_background');
+  // }
