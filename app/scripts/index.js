@@ -9,7 +9,8 @@ var fbUrl = 'https://jdtictactoe.firebaseio.com/games',
        },
      isPlayer1Turn = true,
      gameList,
-     board = [['', '', ''], ['', '', ''], ['', '', '']];
+     board = [['', '', ''], ['', '', ''], ['', '', '']],
+     state = board;
 
 drawBoard(board);
 
@@ -46,6 +47,7 @@ $('.game_board').on('click', 'td', function() {
      board[rowCoord][cellCoord] = 'O';
    }
   toggleTurn(isPlayer1Turn);
+  checkWinner();
   }
 });
 
