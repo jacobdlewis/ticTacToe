@@ -109,13 +109,39 @@ function toggleTurn (userTurn) {
   }
 }
 
-$('#CreateGame').on('click', function(evt){
-	//User enters name.
+$('#createGame').on('click', function(event){
+	//User enters name
 	event.preventDefault();
 	game.user1 = $('#userNameInput').val();
   var newGame = fb.push();
   newGame.set(game);
   });
+
+$('#findGame').on('click', function(event){
+  event.preventDefault();
+  console.log('Find Game clicked');
+  updateGameList();
+});
+
+function updateGameList () {
+  fb.once('value', function(snapshot){
+    gameList=snapshot.val();
+    console.log(gameList);
+    _.forEach(gameList, function(returnedGame) {
+      debugger;
+      if (returnedGame && returnedGame.user2 === "") {
+        returnedGame.user2=$('#userNameInput').val();
+        fb.set(returnedGame);
+      }
+    });
+    console.log(gameList);
+  });
+}
+// fb.on('value', function(dataSnapshot) {
+//   dataSnapshot.forEach(function(item) {
+//     console.log(item.val());
+//   });
+// });
   //ask FB for games
       // fb.once('value', function(snap){
       //  gameList = snap.val();
