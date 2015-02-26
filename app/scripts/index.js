@@ -109,33 +109,33 @@ function toggleTurn (userTurn) {
   }
 }
 
-$('form').submit(function(evt){
+$('#CreateGame').on('click', function(evt){
 	//User enters name.
 	event.preventDefault();
-	var enteredUserName;
-	enteredUserName = $('#userNameInput').val();
-	//ask FB for games
-    fb.once('value', function(snap){
-    	gameList = snap.val();
-    	console.log(gameList);
-    });
-    //if game list is empty, create game.
-    if (gameList === null) {
-    	game.user1 = enteredUserName;
-    	fb.push(game);
-    } 
-    else {
-    //	_.forEach(gameList, function(g){
-    		if (game.user1 === "") {
-    			game.user1 = enteredUserName;
-    			fb.set(game);
-    		} else if (game.user2 === "") {
-                game.user2 = enteredUserName;
-    			fb.set(game);
-    		};
-    	}
-    }
-);
+	game.user1 = $('#userNameInput').val();
+  var newGame = fb.push();
+  newGame.set(game);
+  });
+  //ask FB for games
+      // fb.once('value', function(snap){
+      //  gameList = snap.val();
+      //  console.log(gameList);
+      // });
+
+
+    // else {
+    //   debugger;
+    // 	_.forEach(gameList, function(g){
+    // 		if (game.user1 === "") {
+    // 			game.user1 = enteredUserName;
+    // 			fb.set(game);
+    // 		} else if (game.user2 === "") {
+    //             game.user2 = enteredUserName;
+    // 			fb.set(game);
+    // 		};
+    // 	})
+    // }
+
 
 
 //below was for original color styling prior to X and O
