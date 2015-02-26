@@ -109,60 +109,33 @@ function toggleTurn (userTurn) {
   }
 }
 
-$('#createGame').on('click', function(event){
-	//User enters name
-	event.preventDefault();
-	game.user1 = $('#userNameInput').val();
-  var newGame = fb.push();
-  newGame.set(game);
-  });
-
-$('#findGame').on('click', function(event){
-  event.preventDefault();
-  console.log('Find Game clicked');
+$('#playGame').on('click', function(event){
   updateGameList();
-});
-
-function updateGameList () {
-  fb.once('value', function(snapshot){
-    gameList=snapshot.val();
-    console.log(gameList);
-    _.forEach(gameList, function(returnedGame) {
-      debugger;
+  if (gameList === undefined) {
+	  game.user1 = $('#userNameInput').val();
+    var newGame = fb.push();
+    newGame.set(game);
+  } else {
+  _.forEach(gameList, function(returnedGame) {
       if (returnedGame && returnedGame.user2 === "") {
         returnedGame.user2=$('#userNameInput').val();
         fb.set(returnedGame);
+      } else if (returnedGame && returnedGame.user1 && returnedGame.user2) {
+        debugger;
+        game.user1 = $('#userNameInput').val();
+        var newGame = fb.push();
+        newGame.set(game);
       }
     });
-    console.log(gameList);
+  }
+});
+
+
+function updateGameList () {
+  fb.once('value', function(snapshot){
+    gameList = snapshot.val();
   });
 }
-// fb.on('value', function(dataSnapshot) {
-//   dataSnapshot.forEach(function(item) {
-//     console.log(item.val());
-//   });
-// });
-  //ask FB for games
-      // fb.once('value', function(snap){
-      //  gameList = snap.val();
-      //  console.log(gameList);
-      // });
-
-
-    // else {
-    //   debugger;
-    // 	_.forEach(gameList, function(g){
-    // 		if (game.user1 === "") {
-    // 			game.user1 = enteredUserName;
-    // 			fb.set(game);
-    // 		} else if (game.user2 === "") {
-    //             game.user2 = enteredUserName;
-    // 			fb.set(game);
-    // 		};
-    // 	})
-    // }
-
-
 
 //below was for original color styling prior to X and O
   // if(game.isPlayer1Turn) {
