@@ -10,7 +10,9 @@ var fbUrl = 'https://jdtictactoe.firebaseio.com/games',
      isPlayer1Turn = true,
      gameList,
      board = [['', '', ''], ['', '', ''], ['', '', '']],
-     state = board;
+     state = board,
+     player = 'Player 1',
+     gameOver = false;
 
 drawBoard(board);
 
@@ -31,15 +33,14 @@ function drawBoard(boardArray) {
 $('.game_board').on('click', 'td', function() {
   var cellCoord  = $(this).index(),
       rowCoord = $(this).closest('tr').index();
+  $('.wrongMove').remove();
   if($(this).hasClass('red_background') || $(this).hasClass('blue_background')) {
     $('.container').append('<span class="wrongMove">Invalid move. That space has been claimed.</span>');
   } else {
 	  if(isPlayer1Turn) {
-	    $(this).addClass('red_background'),
-	    $('.wrongMove').remove();
+	    $(this).addClass('red_background');
 	  } else {
-	    $(this).addClass('blue_background'),
-	    $('.wrongMove').remove();;
+	    $(this).addClass('blue_background');
 	  }
   if (isPlayer1Turn === true){
      board[rowCoord][cellCoord] = 'X';
@@ -53,37 +54,50 @@ $('.game_board').on('click', 'td', function() {
 
 function checkWinner() {
 	//horizontal 1st row
+  
   if (state[0][0] !== "" && state[0][0] === state[0][1] && state[0][0] === state[0][2]) {
-    alert(player + ' is the winner!');
+    alert(player + ' is the winner!'),
+    gameOver = true;
   }
   //horizontal 2nd row
   else if (state[1][0] !== "" && state[1][0] === state[1][1] && state[1][0] === state[1][2]) {
-    alert('Winner!');
+    alert(player + ' is the winner!'),
+    gameOver = true;
   }
   //horizontal 3rd row
   else if (state[2][0] !== "" && state[2][0] === state[2][1] && state[2][0] === state[2][2]) {
-    alert('Winner!');
+    alert(player + ' is the winner!'),
+    gameOver = true;
   }
   //vertical 1st column
   else if (state[0][0] !== "" && state[0][0] === state[1][0] && state[1][0] === state[2][0]) {
-    alert('Winner!');
+    alert(player + ' is the winner!'),
+    gameOver = true;
   }
   //vertical 2nd column
   else if (state[0][1] !== "" && state[0][1] === state[1][1] && state[0][1] === state[2][1]) {
-    alert('Winner!');
+    alert(player + ' is the winner!'),
+    gameOver = true;
   }
   //vertical 3rd column
   else if (state[0][2] !== "" && state[0][2] === state[1][2] && state[0][2] === state[2][2]) {
-    alert('Winner!');
+    alert(player + ' is the winner!'),
+    gameOver = true;
   }
   //diagonal right
   else if (state[0][0] !== "" && state[0][0] === state[1][1] && state[0][0] === state[2][2]) {
-    alert('Winner!');
+    alert(player + ' is the winner!'),
+    gameOver = true;
   }
   //diagonal left
   else if (state[0][2] !== "" && state[0][2] === state[1][1] && state[0][2] === state[2][0]) {
-    alert('Winner!');
+    alert(player + ' is the winner!'),
+    gameOver = true;
   }
+  //Draw
+  else if (state[0][0] !== "" && state[0][1] !== "" && state[0][2] !== "" && state[1][0] !== "" && state[1][1] !== "" && state[1][2] !== "" && state[2][0] !== "" && state[2][1] !== "" && state[1][1] !== "") {
+  	alert('DRAW');
+  	 }
 };
 
 //$('form').submit(function(evt){
@@ -117,8 +131,10 @@ function checkWinner() {
 
 function toggleTurn (userTurn) {
   if (userTurn) {
-    isPlayer1Turn = false;
+    isPlayer1Turn = false,
+    player = 'Player 2';
   } else if (userTurn === false) {
-    isPlayer1Turn = true;
+    isPlayer1Turn = true,
+    player = 'Player 1';;
   }
 }
