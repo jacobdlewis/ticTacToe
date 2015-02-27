@@ -1,35 +1,19 @@
+/* jshint jquery: true */
 'use strict';
 
-var fbUrl = 'https://jdtictactoe.firebaseio.com/games',
+var fbUrl = 'https://quic-tac-toe.firebaseio.com/games',
        fb = new Firebase(fbUrl),
        game = {
-       	            user1:"",
-       	            user2:"",
-       	            board:[['', '', ''], ['', '', ''], ['', '', '']],
+       	            gameId       : null,
+                    user1        :"",
+       	            user2        :"",
+       	            board        :[['', '', ''], ['', '', ''], ['', '', '']],
        	            isPlayer1Turn: true
        },
      player = 'Player 1',
      gameList;
 
 drawBoard(game.board);
-
-function drawBoard(boardArray) {
-  var $table = $('<table class="game_board table-bordered"></table>');
-  boardArray.forEach(function(row) {
-    var $row = $('<tr></tr>');
-    row.forEach(function(cell){
-      $row.append('<td>'+ cell +'</td>');
-    });
-    $table.append($row);
-  });
-  $('.container').append($table);
-};
-
-function resetGame () {
-	game.board = [['', '', ''], ['', '', ''], ['', '', '']];
-	$('.game_board').remove();
-	drawBoard(game.board);
-};
 
 $('.container').on('click', 'td', function() {
   var cellCoord  = $(this).index(),
@@ -47,12 +31,79 @@ $('.container').on('click', 'td', function() {
   drawBoard(game.board);
   checkWinner(game.board);
   toggleTurn(game.isPlayer1Turn);
+  updateGameInDb(game);
   }
 });
 
+function toggleTurn (userTurn) {
+  if (userTurn) {
+    game.isPlayer1Turn = false,
+    player = 'Player 2';
+  } else if (userTurn === false) {
+    game.isPlayer1Turn = true,
+    player = 'Player 1';;
+  }
+}
+
+updateGameList();
+//create a game if none exist
+$('#playGame').on('click', function(event){
+  if (gameList === null) {
+    game.user1 = $('#userNameInput').val();
+    var newGame = fb.push();
+    game.gameId = newGame.key();
+    newGame.set(game);
+    updateGameList();
+    $('.status_update').append('<div>Player1, ' + game.user1 + ', has joined the game.</div>');
+  //join a game if a game w/ an opening exists
+  } else if (gameList !== null) {
+  _.forEach(gameList, function(item) {
+      if (item && item.user2 === "") {
+        item.user2=$('#userNameInput').val();
+        $('.status_update').append('<div>Player2, ' + item.user2 + ', has joined the game.</div>');
+        var fbToUpdate = new Firebase(fbUrl + '/' + item.gameId);
+        fbToUpdate.set(item);
+      }
+      else if (item && item.user1 && item.user2) {
+        game.user1 = $('#userNameInput').val();
+        var newGame = fb.push();
+        newGame.set(game);
+      }
+    });
+  }
+});
+
+function updateGameList () {
+  fb.once('value', function(snapshot){
+    gameList = snapshot.val();
+    console.log(gameList);
+  });
+}
+
+function updateGameInDb (gameStatus){
+  var updatedGame = new Firebase (fbUrl + '/' + game.gameId);
+  updatedGame.set(gameStatus);
+}
+
+function drawBoard(boardArray) {
+  var $table = $('<table class="game_board table-bordered"></table>');
+  boardArray.forEach(function(row) {
+    var $row = $('<tr></tr>');
+    row.forEach(function(cell){
+      $row.append('<td>'+ cell +'</td>');
+    });
+    $table.append($row);
+  });
+  $('.container').append($table);
+};
+
+function resetGame () {
+  game.board = [['', '', ''], ['', '', ''], ['', '', '']];
+  $('.game_board').remove();
+  drawBoard(game.board);
+};
 function checkWinner(state) {
-	//horizontal 1st row
-  
+  //horizontal 1st row
   if (state[0][0] !== "" && state[0][0] === state[0][1] && state[0][0] === state[0][2]) {
     alert(player + ' is the winner!'),
     resetGame();
@@ -94,47 +145,9 @@ function checkWinner(state) {
   }
   //Draw
   else if (state[0][0] !== "" && state[0][1] !== "" && state[0][2] !== "" && state[1][0] !== "" && state[1][1] !== "" && state[1][2] !== "" && state[2][0] !== "" && state[2][1] !== "" && state[1][1] !== "") {
-  	alert('DRAW'),
-  	resetGame();
-  	 }
-};
-
-function toggleTurn (userTurn) {
-  if (userTurn) {
-    game.isPlayer1Turn = false,
-    player = 'Player 2';
-  } else if (userTurn === false) {
-    game.isPlayer1Turn = true,
-    player = 'Player 1';;
-  }
-}
-
-$('#playGame').on('click', function(event){
-  updateGameList();
-  if (gameList === undefined) {
-	  game.user1 = $('#userNameInput').val();
-    var newGame = fb.push();
-    newGame.set(game);
-  } else {
-  _.forEach(gameList, function(returnedGame) {
-      if (returnedGame && returnedGame.user2 === "") {
-        returnedGame.user2=$('#userNameInput').val();
-        fb.set(returnedGame);
-      } else if (returnedGame && returnedGame.user1 && returnedGame.user2) {
-        debugger;
-        game.user1 = $('#userNameInput').val();
-        var newGame = fb.push();
-        newGame.set(game);
-      }
-    });
-  }
-});
-
-
-function updateGameList () {
-  fb.once('value', function(snapshot){
-    gameList = snapshot.val();
-  });
+    alert('DRAW'),
+    resetGame();
+     }
 }
 
 //below was for original color styling prior to X and O
