@@ -11,7 +11,14 @@ var fbUrl = 'https://quic-tac-toe.firebaseio.com/games',
        	            isPlayer1Turn: true
        },
      player = 'Player 1',
-     gameList;
+     gameList,
+     currentGameState;
+
+  fb.on('value', function(snap){
+  var dbSnap = snap.val();
+  currentGameState = dbSnap[game.gameId];
+  console.log(currentGameState);
+  });
 
 drawBoard(game.board);
 
@@ -28,10 +35,10 @@ $('.container').on('click', 'td', function() {
      game.board[rowCoord][cellCoord] = 'O';
    }
   $('.game_board').remove();
-  drawBoard(game.board);
   checkWinner(game.board);
   toggleTurn(game.isPlayer1Turn);
   updateGameInDb(game);
+  drawBoard(currentGameState.board);
   }
 });
 
@@ -76,7 +83,6 @@ $('#playGame').on('click', function(event){
 function updateGameList () {
   fb.once('value', function(snapshot){
     gameList = snapshot.val();
-    console.log(gameList);
   });
 }
 
